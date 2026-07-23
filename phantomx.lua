@@ -70,7 +70,15 @@ ScreenGui.Name           = "PhantomX"
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.DisplayOrder   = 999
 ScreenGui.ResetOnSpawn   = false
-pcall(function() ScreenGui.Parent = LP:WaitForChild("PlayerGui") end)
+-- Try CoreGui first (works on most mobile executors), fallback to PlayerGui
+local guiParented = false
+pcall(function()
+    ScreenGui.Parent = game:GetService("CoreGui")
+    guiParented = true
+end)
+if not guiParented then
+    pcall(function() ScreenGui.Parent = LP:WaitForChild("PlayerGui") end)
+end
 _G.PhantomX = ScreenGui
 
 -- colour palette
@@ -135,7 +143,7 @@ local function makeDraggable(handle, frame)
 end
 
 -- ── MAIN WINDOW ──────────────────────────
-local Win = mkFrame(UDim2.new(0,480,0,520), UDim2.new(0,60,0,60), C.bg, ScreenGui)
+local Win = mkFrame(UDim2.new(0,340,0,460), UDim2.new(0.5,-170,0.5,-230), C.bg, ScreenGui)
 Win.Active=true; mkCorner(12,Win); mkStroke(C.border,1.5,Win)
 
 -- title bar
@@ -168,7 +176,7 @@ local CloseBtn = mkTitleBtn("✕", -30, Color3.fromRGB(180,50,50))
 makeDraggable(TitleBar, Win)
 
 -- ── MINI BAR (when minimised) ─────────────
-local Mini=mkFrame(UDim2.new(0,200,0,36),UDim2.new(0,60,0,60),C.bg,ScreenGui)
+local Mini=mkFrame(UDim2.new(0,200,0,36),UDim2.new(0.5,-100,0,20),C.bg,ScreenGui)
 Mini.Active=true; Mini.Visible=false; mkCorner(10,Mini); mkStroke(C.accent,1.5,Mini)
 local MiniLbl=mkLabel("⚡ Phantom X",13,C.accent,Enum.Font.GothamBold,Mini)
 MiniLbl.Size=UDim2.new(1,-44,1,0); MiniLbl.Position=UDim2.new(0,10,0,0)
